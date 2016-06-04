@@ -1,0 +1,220 @@
+{
+  "extensionName": "Sound Generator",
+  "extensionPort": 5256,
+  "url": "https://github.com/yokobond/s2e-sound-generator",
+  "blockSpecs": [
+    [
+      " ",
+      "create Oscillator %s type %m.oscillatorType  frequency %d.frequencyValues",
+      "createOscillator",
+      "osc",
+      "sine",
+      440.00
+    ],
+    [
+      " ",
+      "create Gain %s gain %n",
+      "createGain",
+      "gain",
+      1.0
+    ],
+    [
+      " ",
+      "create Delay %s time %n",
+      "createDelay",
+      "delay",
+      1.0
+    ],
+    [
+      " ",
+      "create BiquadFilter %s type %m.biquadFilterTypes frequency %d.frequencyValues Q %n",
+      "createBiquadFilter",
+      "biquad",
+      "lowpass",
+      440.00,
+      1.0
+    ],
+    [
+      " ",
+      "connect %s to %s",
+      "connectNode",
+      "osc",
+      "gain"
+    ],
+    [
+      " ",
+      "disconnect %s from %s",
+      "disconnectNode",
+      "osc",
+      "gain"
+    ],
+    [
+      " ",
+      "connect %s to destination",
+      "connectDestination",
+      "gain"
+    ],
+    [
+      " ",
+      "disconnect %s from destination",
+      "disconnectDestination",
+      "gain"
+    ],
+    [
+      "-"
+    ],
+    [
+      " ",
+      "set Oscillator %s type %m.oscillatorType",
+      "setOscillatorType",
+      "osc",
+      "sine"
+    ],
+    [
+      " ",
+      "set Oscillator %s frequency %d.frequencyValues",
+      "setOscillatorFrequency",
+      "osc",
+      440.00
+    ],
+    [
+      " ",
+      "set Oscillator %s detune %n",
+      "setOscillatorDetune",
+      "osc",
+      100
+    ],
+    [
+      " ",
+      "set Gain %s value %n",
+      "setGainValue",
+      "gain",
+      1.0
+    ],
+    [
+      " ",
+      "move Gain %s to %n from time %n within %n",
+      "gainSetTargetAtTime",
+      "gain",
+      1.0,
+      0.1,
+      0
+    ],
+    [
+      " ",
+      "set Delay %s time %n",
+      "setDelayTime",
+      "delay",
+      1.0
+    ],
+    [
+      " ",
+      "set BiquadFilter %s type %m.biquadFilterTypes",
+      "setBiquadFilterType",
+      "biquad",
+      "lowpass"
+    ],
+    [
+      " ",
+      "set BiquadFilter %s frequency %d.frequencyValues",
+      "setBiquadFilterFrequency",
+      "biquad",
+      440.00
+    ],
+    [
+      " ",
+      "set BiquadFilter %s Q %n",
+      "setBiquadFilterQ",
+      "biquad",
+      1.0
+    ],
+    [
+      "-"
+    ],
+    [
+      "r",
+      "Oscillator %s type",
+      "getOscillatorType",
+      "osc"
+    ],
+    [
+      "r",
+      "Oscillator %s frequency",
+      "getOscillatorFrequency",
+      "osc"
+    ],
+    [
+      "r",
+      "Oscillator %s detune",
+      "getOscillatorDetune",
+      "osc"
+    ],
+    [
+      "r",
+      "Gain %s value",
+      "getGain",
+      "gain"
+    ],
+    [
+      "r",
+      "Delay %s time",
+      "getDelayTime",
+      "delay"
+    ],
+    [
+      "r",
+      "BiquadFilter %s type",
+      "getBiquadFilterType",
+      "biquad"
+    ],
+    [
+      "r",
+      "BiquadFilter %s frequency",
+      "getBiquadFilterFrequency",
+      "biquad"
+    ],
+    [
+      "r",
+      "BiquadFilter %s Q",
+      "getBiquadFilterQ",
+      "biquad"
+    ]
+  ],
+  "menus": {
+    "nodeType": [
+      "Oscillator",
+      "Delay",
+      "Gain",
+      "BiquadFilter"
+    ],
+    "oscillatorType": [
+      "sine",
+      "square",
+      "sawtooth",
+      "triangle"
+    ],
+    "biquadFilterTypes": [
+      "lowpass",
+      "highpass",
+      "bandpass",
+      "lowshelf",
+      "highshelf",
+      "peaking",
+      "notch",
+      "allpass"
+    ],
+    "frequencyValues": [
+      261.62,
+      293.66,
+      329.62,
+      349.22,
+      391.99,
+      440.00,
+      493.88,
+      523.25
+    ],
+    "destinations": [
+      "destination"
+    ]
+  }
+}

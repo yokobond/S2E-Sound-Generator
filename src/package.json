@@ -1,0 +1,23 @@
+{
+  "name": "S2E-Sound-Generator",
+  "version": "0.0.1",
+  "description": "Scratch2 Offline Editor Extension to generate sound uing WebAudio",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "Scratch",
+    "WebAudio",
+    "Electron"
+  ],
+  "author": "yokobond",
+  "license": "MIT",
+  "dependencies": {
+    "vis": "^4.16.1"
+  },
+  "devDependencies": {
+    "electron-packager": "^7.0.1",
+    "electron-prebuilt": "^1.1.0"
+  }
+}
