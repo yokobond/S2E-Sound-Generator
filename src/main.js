@@ -8,6 +8,7 @@ const path = require('path');
 const electron = require('electron');
 const BrowserWindow = electron.BrowserWindow;
 const app = electron.app;
+const appTitle = 'S2E Sound Generator';
 
 
 // Keep a global reference of the window object, if you don't, the window will
@@ -63,13 +64,6 @@ function installMenu() {
         {
             label: 'View',
             submenu: [
-                // {
-                //     label: 'Reload',
-                //     accelerator: 'CmdOrCtrl+R',
-                //     click(item, focusedWindow) {
-                //         if (focusedWindow) focusedWindow.reload();
-                //     }
-                // },
                 {
                     label: 'Toggle Full Screen',
                     accelerator: process.platform === 'darwin' ? 'Ctrl+Command+F' : 'F11',
@@ -110,19 +104,18 @@ function installMenu() {
             submenu: [
                 {
                     label: 'Learn More',
-                    click() { require('electron').shell.openExternal('http://electron.atom.io'); }
-                },
+                    click() { require('electron').shell.openExternal('https://github.com/yokobond/S2E-Sound-Generator'); }
+                }
             ]
-        },
+        }
     ];
 
     if (process.platform === 'darwin') {
-        const name = app.getName();
         template.unshift({
-            label: name,
+            label: appTitle,
             submenu: [
                 {
-                    label: 'About ' + name,
+                    label: 'About ' + appTitle,
                     role: 'about'
                 },
                 {
@@ -137,7 +130,7 @@ function installMenu() {
                     type: 'separator'
                 },
                 {
-                    label: 'Hide ' + name,
+                    label: 'Hide ' + appTitle,
                     accelerator: 'Command+H',
                     role: 'hide'
                 },
@@ -157,7 +150,7 @@ function installMenu() {
                     label: 'Quit',
                     accelerator: 'Command+Q',
                     click() { app.quit(); }
-                },
+                }
             ]
         });
         // Window menu.
@@ -170,6 +163,21 @@ function installMenu() {
                 role: 'front'
             }
         );
+    }
+
+    if (typeof v8debug === 'object') {
+        template.push({
+            label: 'Dev',
+            submenu: [
+                {
+                    label: 'Reload',
+                    accelerator: 'CmdOrCtrl+R',
+                    click(item, focusedWindow) {
+                        if (focusedWindow) focusedWindow.reload();
+                    }
+                }
+            ]
+        })
     }
 
     const Menu = electron.Menu;
