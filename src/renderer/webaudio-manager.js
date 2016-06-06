@@ -220,30 +220,30 @@ module.exports = function (audioContext, audioVisData) {
         printLog('disconnectDestination: ' + fromNodeID);
     }
 
-    function connectNode(fromNodeID, toNodeID) {
-        let fromNodeSlot = getNodeSlotID(fromNodeID);
+    function connectNode(fromID, toID) {
+        let fromNodeSlot = getNodeSlotID(fromID);
         if (!fromNodeSlot) {
-            printLog('ERROR: Not found ' + fromNodeID);
-            throw ('ERROR: Not found ' + fromNodeID);
+            printLog('ERROR: Not found ' + fromID);
+            throw ('ERROR: Not found ' + fromID);
             return;
         }
-        if (toNodeID.toLowerCase() === 'destination') {
+        if (toID.toLowerCase() === 'destination') {
             fromNodeSlot.node.connect(audioContext.destination);
-            let edgeID = fromNodeID + '->_DESTINATION';
+            let edgeID = fromID + '->_DESTINATION';
             if (!audioVisData.edges.get(edgeID)) {
-                audioVisData.edges.add({id: edgeID, from: fromNodeID, to: '_DESTINATION'});
+                audioVisData.edges.add({id: edgeID, from: fromID, to: '_DESTINATION'});
                 printLog('connectNode: ' + edgeID);
             }
         } else {
             let toParam = null;
-            let toNodeWithParam = toNodeID.split('.');
+            let toNodeWithParam = toID.split('.');
             let toNodeSlot = getNodeSlotID(toNodeWithParam[0]);
             if (toNodeWithParam.length > 1) {
                 toParam = toNodeSlot.node[toNodeWithParam[1]];
             }
             if (!toNodeSlot) {
-                printLog('ERROR: Not found ' + toNodeID);
-                throw ('ERROR: Not found ' + toNodeID);
+                printLog('ERROR: Not found ' + toID);
+                throw ('ERROR: Not found ' + toID);
                 return;
             }
             if (toNodeSlot.nodeType === 'Oscillator' && !toParam) {
@@ -256,41 +256,50 @@ module.exports = function (audioContext, audioVisData) {
             } else {
                 fromNodeSlot.node.connect(toNodeSlot.node);
             }
-            let edgeID = fromNodeID + '->' + toNodeID;
+            let edgeID = fromID + '->' + toID;
             if (!audioVisData.edges.get(edgeID)) {
                 if (toNodeWithParam.length > 1) {
-                    audioVisData.edges.add({id: edgeID, from: fromNodeID, to: toNodeSlot.nodeID, label: toNodeWithParam[1]});
+                    audioVisData.edges.add({id: edgeID, from: fromID, to: toNodeSlot.nodeID, label: toNodeWithParam[1]});
                 } else {
-                    audioVisData.edges.add({id: edgeID, from: fromNodeID, to: toNodeSlot.nodeID, label: ''});
+                    audioVisData.edges.add({id: edgeID, from: fromID, to: toNodeSlot.nodeID, label: ''});
                 }
                 printLog('connectNode: ' + edgeID);
             }
         }
     }
 
-    function disconnectNode(fromNodeID, toNodeID) {
-        let fromNodeSlot = getNodeSlotID(fromNodeID);
+    function disconnectNode(fromID, toID) {
+        let fromNodeSlot = getNodeSlotID(fromID);
         if (!fromNodeSlot) {
-            printLog('ERROR: Not found ' + fromNodeID);
-            throw ('ERROR: Not found ' + fromNodeID);
+            printLog('ERROR: Not found ' + fromID);
+            throw ('ERROR: Not found ' + fromID);
             return;
         }
-        if (toNodeID.toLowerCase() === 'destination') {
+        if (toID.toLowerCase() === 'destination') {
             fromNodeSlot.node.disconnect(audioContext.destination);
-            let edgeID = fromNodeID + '->' + '_DESTINATION';
+            let edgeID = fromID + '->' + '_DESTINATION';
             audioVisData.edges.remove(edgeID);
         } else {
-            let toNodeSlot = getNodeSlotID(toNodeID);
+            let toParam = null;
+            let toNodeWithParam = toID.split('.');
+            let toNodeSlot = getNodeSlotID(toNodeWithParam[0]);
+            if (toNodeWithParam.length > 1) {
+                toParam = toNodeSlot.node[toNodeWithParam[1]];
+            }
             if (!toNodeSlot) {
-                printLog('ERROR: Not found ' + toNodeID);
-                throw ('ERROR: Not found ' + toNodeID);
+                printLog('ERROR: Not found ' + toID);
+                throw ('ERROR: Not found ' + toID);
                 return;
             }
-            fromNodeSlot.node.disconnect(toNodeSlot.node);
-            let edgeID = fromNodeID + '->' + toNodeID;
+            if (toParam) {
+                fromNodeSlot.node.disconnect(toParam);
+            } else {
+                fromNodeSlot.node.disconnect(toNodeSlot.node);
+            }
+            let edgeID = fromID + '->' + toID;
             audioVisData.edges.remove(edgeID);
+            printLog('disconnectNode: ' + edgeID);
         }
-        printLog('disconnectNode: ' + edgeID);
     }
 
     function setOscillatorType(nodeID, waveType) {
@@ -373,28 +382,38 @@ module.exports = function (audioContext, audioVisData) {
         }
     }
 
-    function gainSetTargetAtTime(nodeID, targetValue, startTime, timeConstant) {
-        let aSlot = getNodeSlotID(nodeID);
-        if (!aSlot) {
-            printLog('ERROR: Not found ' + nodeID);
-            throw ('ERROR: Not found ' + nodeID);
+    function setTargetAtTime(targetID, targetValue, startTime, timeConstant) {
+        let targetParam = null;
+        let targetNodeWithParam = targetID.split('.');
+        let targetNodeSlot = getNodeSlotID(targetNodeWithParam[0]);
+        if (!targetNodeSlot) {
+            printLog('ERROR: Not found: ' + targetNodeWithParam[0] + ' at setTargetAtTime');
+            throw ('ERROR: Not found: ' + targetNodeWithParam[0] + ' at setTargetAtTime');
             return;
         }
-        if (aSlot.nodeType !== 'Gain') {
-            printLog('ERROR: ' + nodeID + ' is not a Gain.');
-            throw ('ERROR: ' + nodeID + ' is not a Gain.');
+        if (targetNodeWithParam.length > 1) {
+            targetParam = targetNodeSlot.node[targetNodeWithParam[1]];
+        } else {
+            printLog('ERROR: Must assign param: ' + targetID + ' at setTargetAtTime');
+            throw ('ERROR: Must assign param: ' + targetID + ' at setTargetAtTime');
             return;
         }
-        aSlot.node.gain.setTargetAtTime(targetValue, audioContext.currentTime + startTime, timeConstant);
+        if (!targetParam) {
+            printLog('ERROR: Not found param: ' + targetID + ' at setTargetAtTime');
+            throw ('ERROR: Not found param: ' + targetID + ' at setTargetAtTime');
+            return;
+        }
+        targetParam.setTargetAtTime(targetValue, audioContext.currentTime + startTime, timeConstant);
         setTimeout(
             function () {
-                let visNode = audioVisData.nodes.get(nodeID);
+                let visNode = audioVisData.nodes.get(targetNodeSlot.nodeID);
                 if (visNode) {
-                    visNode.label = visLabel(aSlot);
+                    visNode.label = visLabel(targetNodeSlot);
                     audioVisData.nodes.update(visNode);
                 }
             },
-            timeConstant * 1000);
+            (timeConstant * 4) * 1000
+        );
     }
 
     function setDelayTime(nodeID, delayTime) {
@@ -507,7 +526,7 @@ module.exports = function (audioContext, audioVisData) {
         setOscillatorFrequency: setOscillatorFrequency,
         setOscillatorDetune: setOscillatorDetune,
         setGainValue: setGainValue,
-        gainSetTargetAtTime: gainSetTargetAtTime,
+        setTargetAtTime: setTargetAtTime,
         setDelayTime: setDelayTime,
         setBiquadFilterType: setBiquadFilterType,
         setBiquadFilterFrequency: setBiquadFilterFrequency,

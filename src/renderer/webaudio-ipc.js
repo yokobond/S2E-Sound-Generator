@@ -120,9 +120,9 @@ module.exports = function (audioManager) {
         }
     });
 
-    ipcRenderer.on('gainSetTargetAtTime', function (event, nodeID, targetValue, startTime, timeConstant ) {
+    ipcRenderer.on('setTargetAtTime', function (event, targetID, targetValue, startTime, timeConstant ) {
         try {
-            audioManager.gainSetTargetAtTime(nodeID, targetValue, startTime, timeConstant);
+            audioManager.setTargetAtTime(targetID, targetValue, startTime, timeConstant);
         } catch (e) {
             console.log(e);
         }

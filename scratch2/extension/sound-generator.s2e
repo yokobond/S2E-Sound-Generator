@@ -65,6 +65,15 @@
     ],
     [
       " ",
+      "change %s to %n start at %n within %n",
+      "setTargetAtTime",
+      "gain.gain",
+      1.0,
+      0,
+      0.1
+    ],
+    [
+      " ",
       "set Oscillator %s type %m.oscillatorType",
       "setOscillatorType",
       "osc",
@@ -90,15 +99,6 @@
       "setGainValue",
       "gain",
       1.0
-    ],
-    [
-      " ",
-      "move Gain %s to %n from time %n within %n",
-      "gainSetTargetAtTime",
-      "gain",
-      1.0,
-      0.1,
-      0
     ],
     [
       " ",

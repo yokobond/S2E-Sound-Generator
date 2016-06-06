@@ -121,8 +121,8 @@ module.exports = function (window) {
             window.webContents.send('setOscillatorDetune', path[2], parseFloat(path[3]));
         } else if (path[1] == 'setGainValue') {
             window.webContents.send('setGainValue', path[2], parseFloat(path[3]));
-        } else if (path[1] == 'gainSetTargetAtTime') {
-            window.webContents.send('gainSetTargetAtTime', path[2], parseFloat(path[3]), parseFloat(path[4]), parseFloat(path[5]));
+        } else if (path[1] == 'setTargetAtTime') {
+            window.webContents.send('setTargetAtTime', path[2], parseFloat(path[3]), parseFloat(path[4]), parseFloat(path[5]));
         } else if (path[1] == 'setDelayTime') {
             window.webContents.send('setDelayTime', path[2], parseFloat(path[3]));
         } else if (path[1] == 'setBiquadFilterType') {
