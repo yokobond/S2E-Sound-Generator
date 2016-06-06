@@ -54,9 +54,10 @@
     }
   };
   var audioVisNetwork = new vis.Network(audioVisContainer, audioVisData, audioVisOptions);
-
-  var audioManager = require('./rendere/webaudio-manager')(audioContext, audioVisData);
-  require('./rendere/webaudio-ipc')(audioManager);
+  var path = require('path');
+  module.paths.push(path.resolve(__dirname, 'renderer'));
+  var audioManager = require('webaudio-manager.js')(audioContext, audioVisData);
+  require('webaudio-ipc.js')(audioManager);
 
 </script>
 
